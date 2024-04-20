@@ -11,7 +11,7 @@ namespace Psicologiaa.Repositorios
     {
         Task<List<Sesion>> GetAllSesion();
         Task<Sesion> GetSesion(int IdSesion);
-        Task<Sesion> CreateSesion(DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas);
+        Task<Sesion> CreateSesion(int IdEvaluacion, DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas);
         Task<Sesion> UpdateSesion(Sesion sesion);
         Task<Sesion> DeleteSesion(Sesion sesion);
     }
@@ -31,14 +31,15 @@ namespace Psicologiaa.Repositorios
         {
             return await _db.sesion.FirstOrDefaultAsync(d => d.IdSesion == IdSesion);
         }
-        public async Task<Sesion> CreateSesion(DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas)
+        public async Task<Sesion> CreateSesion(int IdEvaluacion, DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas)
         {
             Sesion newSesion = new Sesion
             {
                 FechaInicio = FechaInicio,
                 FechaFin = FechaFin,
                 TiempoSesion = TiempoSesion,
-                Notas = Notas
+                Notas = Notas,
+                IdEvaluacion = IdEvaluacion,
 
             };
             await _db.sesion.AddAsync(newSesion);
@@ -53,6 +54,7 @@ namespace Psicologiaa.Repositorios
                 ConsultUpdate.FechaInicio= sesion.FechaInicio;
                 ConsultUpdate.FechaFin = sesion.FechaFin;
                 ConsultUpdate.TiempoSesion = sesion.TiempoSesion;
+                ConsultUpdate.IdEvaluacion = sesion.IdEvaluacion;
 
                 await _db.SaveChangesAsync();
             }

@@ -14,8 +14,8 @@ namespace Psicologiaa.Services
     }
     public class EvaluacionService : IEvaluacionService
     {
-        public readonly EvaluacionRepository _evaluacionRepository;
-        public EvaluacionService(EvaluacionRepository evaluacionRepository)
+        public readonly IEvaluacionRepository _evaluacionRepository;
+        public EvaluacionService(IEvaluacionRepository evaluacionRepository)
         {
             _evaluacionRepository = evaluacionRepository;
         }

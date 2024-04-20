@@ -8,20 +8,20 @@ namespace Psicologiaa.Services
     {
         Task<List<Sesion>> GetAllSesion();
         Task<Sesion> GetSesion(int IdSesion);
-        Task<Sesion> CreateSesion(DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas);
-        Task<Sesion> UpdateSesion(int IdSesion, DateOnly? FechaInicio=null, DateOnly? FechaFin= null, DateTime? TiempoSesion= null, string? Notas=null);
+        Task<Sesion> CreateSesion(int IdEvaluacion, DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas);
+        Task<Sesion> UpdateSesion(int IdSesion, int? IdEvaluacion =null, DateOnly? FechaInicio=null, DateOnly? FechaFin= null, DateTime? TiempoSesion= null, string? Notas=null);
         Task<Sesion> DeleteSesion(int IdSesion);
     }
     public class SesionService : ISesionService
     {
-        public readonly SesionRepository _sesionRepository;
-        public SesionService(SesionRepository sesionRepository)
+        public readonly ISesionRepository _sesionRepository;
+        public SesionService(ISesionRepository sesionRepository)
         {
             _sesionRepository = sesionRepository;
         }
-        public async Task<Sesion> CreateSesion(DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas)
+        public async Task<Sesion> CreateSesion(int IdEvaluacion, DateOnly FechaInicio, DateOnly FechaFin, DateTime TiempoSesion, string Notas)
         {
-            return await _sesionRepository.CreateSesion(FechaInicio, FechaFin, TiempoSesion, Notas);
+            return await _sesionRepository.CreateSesion(IdEvaluacion, FechaInicio, FechaFin, TiempoSesion, Notas);
         }
         public async Task<List<Sesion>> GetAllSesion()
         {
@@ -31,7 +31,7 @@ namespace Psicologiaa.Services
         {
             return await _sesionRepository.GetSesion(IdSesion);
         }
-        public async Task<Sesion> UpdateSesion(int IdSesion, DateOnly? FechaInicio = null, DateOnly? FechaFin = null, DateTime? TiempoSesion = null, string? Notas = null)
+        public async Task<Sesion> UpdateSesion(int IdSesion, int? IdEvaluacion = null, DateOnly? FechaInicio = null, DateOnly? FechaFin = null, DateTime? TiempoSesion = null, string? Notas = null)
         {
             Sesion newSesion = await _sesionRepository.GetSesion(IdSesion);
 
@@ -52,6 +52,10 @@ namespace Psicologiaa.Services
                 if (TiempoSesion != null)
                 {
                     newSesion.TiempoSesion = (DateTime)TiempoSesion;
+                }
+                if (IdEvaluacion != null)
+                {
+                    newSesion.IdEvaluacion = (int)IdEvaluacion;
                 }
                 return await _sesionRepository.UpdateSesion(newSesion);
 

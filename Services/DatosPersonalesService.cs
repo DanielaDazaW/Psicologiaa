@@ -14,8 +14,8 @@ namespace Psicologiaa.Services
         }
         public class DatosPersonalesService : IDatosPersonalesService
         {
-        public readonly DatosPersonalesRepository _datosPersonalesRepository;
-        public DatosPersonalesService (DatosPersonalesRepository datosPersonalesRepository)
+        public readonly IDatosPersonalesRepository _datosPersonalesRepository;
+        public DatosPersonalesService (IDatosPersonalesRepository datosPersonalesRepository)
         {
             _datosPersonalesRepository = datosPersonalesRepository;
         }

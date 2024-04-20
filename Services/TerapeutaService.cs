@@ -14,8 +14,8 @@ namespace Psicologiaa.Services
     }
     public class TerapeutaService : ITerapeutaService
     {
-        public readonly TerapeutaRepository _terapeutaRepository;
-        public TerapeutaService(TerapeutaRepository terapeutaRepository)
+        public readonly ITerapeutaRepository _terapeutaRepository;
+        public TerapeutaService(ITerapeutaRepository terapeutaRepository)
         {
             _terapeutaRepository = terapeutaRepository;
         }

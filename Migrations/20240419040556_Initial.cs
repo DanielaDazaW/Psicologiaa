@@ -28,6 +28,21 @@ namespace Psicologiaa.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "evaluacion",
+                columns: table => new
+                {
+                    IdEvaluacion = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    TipoEvaluacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Resultados = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_evaluacion", x => x.IdEvaluacion);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "paciente",
                 columns: table => new
                 {
@@ -35,7 +50,7 @@ namespace Psicologiaa.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Genero = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdDatos = table.Column<int>(type: "int", nullable: false),
-                    DatosPersonalesIdDatos = table.Column<int>(type: "int", nullable: false)
+                    DatosPersonalesIdDatos = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,8 +59,7 @@ namespace Psicologiaa.Migrations
                         name: "FK_paciente_datosPersonales_DatosPersonalesIdDatos",
                         column: x => x.DatosPersonalesIdDatos,
                         principalTable: "datosPersonales",
-                        principalColumn: "IdDatos",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdDatos");
                 });
 
             migrationBuilder.CreateTable(
@@ -56,7 +70,7 @@ namespace Psicologiaa.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Especialidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdDatos = table.Column<int>(type: "int", nullable: false),
-                    DatosPersonalesIdDatos = table.Column<int>(type: "int", nullable: false)
+                    DatosPersonalesIdDatos = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,31 +79,7 @@ namespace Psicologiaa.Migrations
                         name: "FK_terapeuta_datosPersonales_DatosPersonalesIdDatos",
                         column: x => x.DatosPersonalesIdDatos,
                         principalTable: "datosPersonales",
-                        principalColumn: "IdDatos",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "evaluacion",
-                columns: table => new
-                {
-                    IdEvaluacion = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdPaciente = table.Column<int>(type: "int", nullable: false),
-                    PacienteIdPaciente = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
-                    TipoEvaluacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Resultados = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_evaluacion", x => x.IdEvaluacion);
-                    table.ForeignKey(
-                        name: "FK_evaluacion_paciente_PacienteIdPaciente",
-                        column: x => x.PacienteIdPaciente,
-                        principalTable: "paciente",
-                        principalColumn: "IdPaciente",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdDatos");
                 });
 
             migrationBuilder.CreateTable(
@@ -99,7 +89,9 @@ namespace Psicologiaa.Migrations
                     IdSesion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdPaciente = table.Column<int>(type: "int", nullable: false),
-                    PacienteIdPaciente = table.Column<int>(type: "int", nullable: false),
+                    PacienteIdPaciente = table.Column<int>(type: "int", nullable: true),
+                    IdEvaluacion = table.Column<int>(type: "int", nullable: false),
+                    EvaluacionIdEvaluacion = table.Column<int>(type: "int", nullable: true),
                     FechaInicio = table.Column<DateOnly>(type: "date", nullable: false),
                     FechaFin = table.Column<DateOnly>(type: "date", nullable: false),
                     TiempoSesion = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -109,22 +101,26 @@ namespace Psicologiaa.Migrations
                 {
                     table.PrimaryKey("PK_sesion", x => x.IdSesion);
                     table.ForeignKey(
+                        name: "FK_sesion_evaluacion_EvaluacionIdEvaluacion",
+                        column: x => x.EvaluacionIdEvaluacion,
+                        principalTable: "evaluacion",
+                        principalColumn: "IdEvaluacion");
+                    table.ForeignKey(
                         name: "FK_sesion_paciente_PacienteIdPaciente",
                         column: x => x.PacienteIdPaciente,
                         principalTable: "paciente",
-                        principalColumn: "IdPaciente",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdPaciente");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_evaluacion_PacienteIdPaciente",
-                table: "evaluacion",
-                column: "PacienteIdPaciente");
 
             migrationBuilder.CreateIndex(
                 name: "IX_paciente_DatosPersonalesIdDatos",
                 table: "paciente",
                 column: "DatosPersonalesIdDatos");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_sesion_EvaluacionIdEvaluacion",
+                table: "sesion",
+                column: "EvaluacionIdEvaluacion");
 
             migrationBuilder.CreateIndex(
                 name: "IX_sesion_PacienteIdPaciente",
@@ -141,13 +137,13 @@ namespace Psicologiaa.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "evaluacion");
-
-            migrationBuilder.DropTable(
                 name: "sesion");
 
             migrationBuilder.DropTable(
                 name: "terapeuta");
+
+            migrationBuilder.DropTable(
+                name: "evaluacion");
 
             migrationBuilder.DropTable(
                 name: "paciente");

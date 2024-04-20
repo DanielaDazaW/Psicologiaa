@@ -13,8 +13,8 @@ namespace Psicologiaa.Services
     }
     public class PacienteService : IPacienteService
     {
-        public readonly PacienteRepository _pacienteRepository;
-        public PacienteService(PacienteRepository pacienteRepository)
+        public readonly IPacienteRepository _pacienteRepository;
+        public PacienteService(IPacienteRepository pacienteRepository)
         {
             _pacienteRepository = pacienteRepository;
         }

@@ -12,8 +12,8 @@ using Psicologia.Context;
 namespace Psicologiaa.Migrations
 {
     [DbContext(typeof(EntidadesDbContext))]
-    [Migration("20240304005510_Initial")]
-    partial class Initial
+    [Migration("20240419040711_Paciente")]
+    partial class Paciente
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Psicologiaa.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Psicologiaa.Modelo.DatosPersonales", b =>
+            modelBuilder.Entity("Psicologiaa.Model.DatosPersonales", b =>
                 {
                     b.Property<int>("IdDatos")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace Psicologiaa.Migrations
                     b.ToTable("datosPersonales");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Evaluacion", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Evaluacion", b =>
                 {
                     b.Property<int>("IdEvaluacion")
                         .ValueGeneratedOnAdd()
@@ -64,12 +64,6 @@ namespace Psicologiaa.Migrations
 
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
-
-                    b.Property<int>("IdPaciente")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PacienteIdPaciente")
-                        .HasColumnType("int");
 
                     b.Property<string>("Resultados")
                         .IsRequired()
@@ -81,12 +75,10 @@ namespace Psicologiaa.Migrations
 
                     b.HasKey("IdEvaluacion");
 
-                    b.HasIndex("PacienteIdPaciente");
-
                     b.ToTable("evaluacion");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Paciente", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Paciente", b =>
                 {
                     b.Property<int>("IdPaciente")
                         .ValueGeneratedOnAdd()
@@ -94,7 +86,7 @@ namespace Psicologiaa.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPaciente"));
 
-                    b.Property<int>("DatosPersonalesIdDatos")
+                    b.Property<int?>("DatosPersonalesIdDatos")
                         .HasColumnType("int");
 
                     b.Property<string>("Genero")
@@ -111,7 +103,7 @@ namespace Psicologiaa.Migrations
                     b.ToTable("paciente");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Sesion", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Sesion", b =>
                 {
                     b.Property<int>("IdSesion")
                         .ValueGeneratedOnAdd()
@@ -119,11 +111,17 @@ namespace Psicologiaa.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdSesion"));
 
+                    b.Property<int?>("EvaluacionIdEvaluacion")
+                        .HasColumnType("int");
+
                     b.Property<DateOnly>("FechaFin")
                         .HasColumnType("date");
 
                     b.Property<DateOnly>("FechaInicio")
                         .HasColumnType("date");
+
+                    b.Property<int>("IdEvaluacion")
+                        .HasColumnType("int");
 
                     b.Property<int>("IdPaciente")
                         .HasColumnType("int");
@@ -132,7 +130,7 @@ namespace Psicologiaa.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PacienteIdPaciente")
+                    b.Property<int?>("PacienteIdPaciente")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TiempoSesion")
@@ -140,12 +138,14 @@ namespace Psicologiaa.Migrations
 
                     b.HasKey("IdSesion");
 
+                    b.HasIndex("EvaluacionIdEvaluacion");
+
                     b.HasIndex("PacienteIdPaciente");
 
                     b.ToTable("sesion");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Terapeuta", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Terapeuta", b =>
                 {
                     b.Property<int>("IdTerapeuta")
                         .ValueGeneratedOnAdd()
@@ -153,7 +153,7 @@ namespace Psicologiaa.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTerapeuta"));
 
-                    b.Property<int>("DatosPersonalesIdDatos")
+                    b.Property<int?>("DatosPersonalesIdDatos")
                         .HasColumnType("int");
 
                     b.Property<string>("Especialidad")
@@ -170,46 +170,35 @@ namespace Psicologiaa.Migrations
                     b.ToTable("terapeuta");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Evaluacion", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Paciente", b =>
                 {
-                    b.HasOne("Psicologiaa.Modelo.Paciente", "Paciente")
+                    b.HasOne("Psicologiaa.Model.DatosPersonales", "DatosPersonales")
                         .WithMany()
-                        .HasForeignKey("PacienteIdPaciente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Paciente");
-                });
-
-            modelBuilder.Entity("Psicologiaa.Modelo.Paciente", b =>
-                {
-                    b.HasOne("Psicologiaa.Modelo.DatosPersonales", "DatosPersonales")
-                        .WithMany()
-                        .HasForeignKey("DatosPersonalesIdDatos")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DatosPersonalesIdDatos");
 
                     b.Navigation("DatosPersonales");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Sesion", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Sesion", b =>
                 {
-                    b.HasOne("Psicologiaa.Modelo.Paciente", "Paciente")
+                    b.HasOne("Psicologiaa.Model.Evaluacion", "Evaluacion")
                         .WithMany()
-                        .HasForeignKey("PacienteIdPaciente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EvaluacionIdEvaluacion");
+
+                    b.HasOne("Psicologiaa.Model.Paciente", "Paciente")
+                        .WithMany()
+                        .HasForeignKey("PacienteIdPaciente");
+
+                    b.Navigation("Evaluacion");
 
                     b.Navigation("Paciente");
                 });
 
-            modelBuilder.Entity("Psicologiaa.Modelo.Terapeuta", b =>
+            modelBuilder.Entity("Psicologiaa.Model.Terapeuta", b =>
                 {
-                    b.HasOne("Psicologiaa.Modelo.DatosPersonales", "DatosPersonales")
+                    b.HasOne("Psicologiaa.Model.DatosPersonales", "DatosPersonales")
                         .WithMany()
-                        .HasForeignKey("DatosPersonalesIdDatos")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DatosPersonalesIdDatos");
 
                     b.Navigation("DatosPersonales");
                 });

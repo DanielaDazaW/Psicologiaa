@@ -38,7 +38,7 @@ namespace Psicologiaa.Controllers
             {
                 return BadRequest("El objeto Sesion es nulo");
             }
-            var newSesion = await _sesionService.CreateSesion(sesion.FechaInicio, sesion.FechaFin, sesion.TiempoSesion, sesion.Notas);
+            var newSesion = await _sesionService.CreateSesion(sesion.IdEvaluacion,sesion.FechaInicio, sesion.FechaFin, sesion.TiempoSesion, sesion.Notas);
             return Ok(newSesion);
         }
 
@@ -51,7 +51,7 @@ namespace Psicologiaa.Controllers
             {
                 return BadRequest("Datos de entrada invalidos para actualizar Sesion");
             }
-            var updateSesion = await _sesionService.UpdateSesion(IdSesion, Updatesesion.FechaInicio, Updatesesion.FechaFin, Updatesesion.TiempoSesion, Updatesesion.Notas);
+            var updateSesion = await _sesionService.UpdateSesion(IdSesion,Updatesesion.IdEvaluacion, Updatesesion.FechaInicio, Updatesesion.FechaFin, Updatesesion.TiempoSesion, Updatesesion.Notas);
             return Ok(updateSesion);
 
         }
