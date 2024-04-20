@@ -10,9 +10,9 @@ namespace Psicologiaa.Controllers
     public class EvaluacionController : ControllerBase
     {
 
-        private readonly EvaluacionService _evaluacionService;
+        private readonly IEvaluacionService _evaluacionService;
 
-        public EvaluacionController(EvaluacionService evaluacionService)
+        public EvaluacionController(IEvaluacionService evaluacionService)
         {
             _evaluacionService = evaluacionService;
         }

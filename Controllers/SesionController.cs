@@ -10,8 +10,8 @@ namespace Psicologiaa.Controllers
     public class SesionController : ControllerBase
     {
 
-        private readonly SesionService _sesionService;
-        public SesionController(SesionService SesionService)
+        private readonly ISesionService _sesionService;
+        public SesionController(ISesionService SesionService)
         {
             _sesionService = SesionService;
         }

@@ -10,9 +10,9 @@ namespace Psicologiaa.Controllers
     public class PacienteController : ControllerBase
     {
 
-        private readonly PacienteService _pacienteService;
+        private readonly IPacienteService _pacienteService;
 
-        public PacienteController(PacienteService pacienteService)
+        public PacienteController(IPacienteService pacienteService)
         {
             _pacienteService = pacienteService;
         }

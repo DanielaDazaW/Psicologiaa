@@ -10,8 +10,8 @@ namespace Psicologiaa.Controllers
     [ApiController]
     public class DatosPersonalesController : ControllerBase
     {
-        private readonly DatosPersonalesService _datosPersonalesService;
-        public DatosPersonalesController(DatosPersonalesService datosPersonalesService)
+        private readonly IDatosPersonalesService _datosPersonalesService;
+        public DatosPersonalesController(IDatosPersonalesService datosPersonalesService)
         {
             _datosPersonalesService = datosPersonalesService;
         }
